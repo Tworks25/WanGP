@@ -8,6 +8,11 @@ os.environ.setdefault("OPENBLAS_NUM_THREADS", str(min(8, os.cpu_count() or 8)))
 p = os.path.dirname(os.path.abspath(__file__))
 if p not in sys.path:
     sys.path.insert(0, p)
+# The data paths used below (models/, settings/, defaults/, finetunes/, profiles/) are
+# relative to the install directory. An MCP client starts this server with its own
+# working directory, so anchor the process at the install directory the same way
+# shared/api.py and shared/mcp/server.py already do for the paths they resolve.
+os.chdir(p)
 from shared.native_runtime import preload_preferred_libstdcxx
 preload_preferred_libstdcxx()
 from shared.default_device import set_default_cuda_device_from_arg; set_default_cuda_device_from_arg("gpu")
